@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-KGXX/TPjrifSj9VkzoRYlHdI6u2tTW6GDNZNK/TBDHY='; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-qsAiymv/i5gJ9M79ncz7sP4LXm8OeQWofiNuOrNPzg8='; base-uri 'none'; form-action 'none'">
 <title>Ouvrir Claude</title>
 <style>
 :root {
@@ -89,7 +89,7 @@ pre {
 <script>
 (() => {
   const SESSION = /^claude:\/\/claude\.ai\/epitaxy\/local_[A-Za-z0-9-]+$/;
-  const NEW_SESSION = /^claude:\/\/code\/new\?[A-Za-z0-9%._~!*'()&=-]+$/;
+  const NEW_SESSION = /^claude:\/\/code\/new\?q=[A-Za-z0-9%._~!*'()-]+&folder=%2FUsers%2Fkfachas%2FDesktop%2Ftomoni%2Ftomoni-workspace$/;
   const readTarget = () => {
     try {
       const raw = decodeURIComponent(location.hash.slice(1));
