@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-KGXX/TPjrifSj9VkzoRYlHdI6u2tTW6GDNZNK/TBDHY='; base-uri 'none'; form-action 'none'">
+<title>Ouvrir Claude</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #172030;
+  --muted: #5a6577;
+  --line: #e1e5ec;
+  --accent: #2c51cc;
+  --accent-ink: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0d1117;
+    --surface: #151b24;
+    --ink: #e4e8ef;
+    --muted: #9ba4b3;
+    --line: #242c38;
+    --accent: #819bff;
+    --accent-ink: #0d1117;
+  }
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+main {
+  width: min(560px, 100%);
+  box-sizing: border-box;
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+h1 { margin: 0; font-size: 20px; }
+p { margin: 0; color: var(--muted); }
+a.open {
+  justify-self: start;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+a.open:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+pre {
+  margin: 0;
+  max-height: 40vh;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  font: 13px/1.45 ui-monospace, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Ouverture de Claude…</h1>
+  <p id="status">Ton navigateur va te demander d'ouvrir l'app Claude.</p>
+  <a class="open" id="open" href="./" hidden>Ouvrir dans Claude</a>
+  <pre id="prompt" hidden></pre>
+  <p id="after" hidden>Tu peux fermer cet onglet une fois Claude ouvert.</p>
+</main>
+<script>
+(() => {
+  const SESSION = /^claude:\/\/claude\.ai\/epitaxy\/local_[A-Za-z0-9-]+$/;
+  const NEW_SESSION = /^claude:\/\/code\/new\?[A-Za-z0-9%._~!*'()&=-]+$/;
+  const readTarget = () => {
+    try {
+      const raw = decodeURIComponent(location.hash.slice(1));
+      return SESSION.test(raw) || NEW_SESSION.test(raw) ? raw : null;
+    } catch {
+      return null;
+    }
+  };
+  const target = readTarget();
+  history.replaceState(null, "", location.pathname);
+  const title = document.getElementById("title");
+  const status = document.getElementById("status");
+  if (!target) {
+    title.textContent = "Lien invalide";
+    status.textContent = "Cette page n'ouvre que des liens de session Claude Code.";
+    return;
+  }
+  const prompt = new URL(target).searchParams.get("q");
+  if (prompt) {
+    const box = document.getElementById("prompt");
+    box.textContent = prompt;
+    box.hidden = false;
+  }
+  status.textContent = prompt
+    ? "Claude va s'ouvrir avec ce prompt pré-rempli. Rien n'est envoyé tant que tu n'appuies pas sur Entrée."
+    : "Claude va rouvrir ta session.";
+  const open = document.getElementById("open");
+  open.href = target;
+  open.hidden = false;
+  document.getElementById("after").hidden = false;
+  location.href = target;
+})();
+</script>
+</body>
+</html>
